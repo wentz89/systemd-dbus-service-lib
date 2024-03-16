@@ -1,3 +1,4 @@
+/*
 MIT License
 
 Copyright (c) 2024 Alexander Wentz
@@ -19,4 +20,25 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+*/
 
+#include "../systemdDbusServiceLib.h"
+
+int main(){
+    sysddbus::SystemdDbusServiceLib obj{};
+    if(obj.isGood()){
+        std::string service{"example.service"};
+        int ret = obj.doServiceAction(sysddbus::ServiceAction::MASK, service);
+        ret |= obj.doServiceAction(sysddbus::ServiceAction::UNMASK, service);
+        ret |= obj.doServiceAction(sysddbus::ServiceAction::ENABLE, service);
+        ret |= obj.doServiceAction(sysddbus::ServiceAction::START, service);
+        // usleep(1000000); activation sometimes takes some time
+        ret |= obj.doServiceAction(sysddbus::ServiceAction::STOP, service);
+        ret |= obj.doServiceAction(sysddbus::ServiceAction::DISABLE, service);
+        if(ret != 0){
+            printf("Error\n");
+        }
+    }
+
+    return 0;
+}
